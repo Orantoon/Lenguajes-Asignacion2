@@ -1,7 +1,10 @@
-package main
+package funciones
 
 import (
 	"fmt"
+	"os"
+
+	"github.com/wcharczuk/go-chart"
 )
 
 /*
@@ -12,7 +15,7 @@ deberá ser un número primo entre 11 y 101. Los valores generados deben ser con
 53. El período debe ser ≥ 2048. n puede ser cualquier número en el intervalo 200 .. 1000.
 */
 
-func randArray(n int, seed int, k int, m int) []int {
+func RandArray(n int, seed int, k int, m int) []int {
 	
 	// Validating "n"
 	if n < 200 || n > 1000 {
@@ -47,14 +50,24 @@ func randArray(n int, seed int, k int, m int) []int {
 	
 	arr := make([]int, n)
 	a := 8*k + 3	// 8k + 5 can also be used
+	//first := seed
 
 	for i := 0; i < n; i++ {	// Generating the Array
 		num := (a * seed) % m	// Main Algorithm, X = (a * [seed or previous number]) % m
+		num = num % 54	// Changed to 0..53
+
+		/*
+		if num == first && i != 0{	// We can stop the loop to avoid repeating the pattern
+			arr = arr[:i]
+			break
+		}
+		*/
+
 		arr[i] = num
 		seed = num	// Seed is now the previous number
 	}
 
-	//fmt.Println("Resultado: ", arr)
+	fmt.Println("Resultado: ", arr)
 
 	return arr
 }
@@ -68,6 +81,38 @@ directamente proporcional al número que representan.
 */
 
 
+func ArrChart(arr []int) {
+
+	arrVal := createValues(arr)
+	
+	graph := chart.BarChart{
+		Title : "Gráfico de Barras",
+		Background: chart.Style{
+			Padding: chart.Box{
+				Top: 30,
+			},
+		},
+		Height : 256,
+		BarWidth: 50,
+
+		Bars: arrVal,
+	}
+	f , _ := os.Create("resultado.png")
+	defer f.Close()
+	graph.Render(chart.PNG,f)
+}
+
+func createValues(arr []int) []chart.Value{	// Creates a Value array from a normal array
+	res := []chart.Value{}
+	val := chart.Value{}
+
+	for i := 0; i < len(arr); i++{
+		val.Value = float64(arr[i])
+		res = append(res, val)
+	}
+	return res
+}
+
 
 /*
 ============
@@ -77,7 +122,7 @@ se encuentra en el arreglo, no la inserta. La función retorna un número entero
 comparaciones realizadas, incluida la que llevó a la inserción.
 */
 
-func insertVal(arr *[]int, key int) int {
+func InsertVal(arr *[]int, key int) int {
 	for index, value := range *arr {
 		if value == key {
 			return index + 1 // Found, returns number of comparisons done [index + 1 because it starts at 0]
@@ -106,7 +151,7 @@ func test3(){
 ordenamiento de selección. Este algoritmo es cuadrático en promedio.
 */
 
-func selectionSort(arr *[]int) {
+func SelectionSort(arr *[]int) {
 	arr2 := *arr
 	len := len(arr2)
 
@@ -141,7 +186,7 @@ func test4(){
 ordenamiento conocido como Quicksort. Este algoritmo es O(n log2 (n)) en promedio.
 */
 
-func partition(arr *[]int, low int, high int) int { //
+func Partition(arr *[]int, low int, high int) int { //
 	arrC := *arr
 	pivot := arrC[high]
 
@@ -162,16 +207,16 @@ func partition(arr *[]int, low int, high int) int { //
 	return i + 1 //new pivot
 }
 
-func quicksort(arr *[]int, low int, high int) {
+func Quicksort(arr *[]int, low int, high int) {
 	if low < high { //Divides into subarrays by selecting a pivot and organizes them
-		pivot := partition(arr, low, high)
-		quicksort(arr, low, pivot-1)
-		quicksort(arr, pivot+1, high)
+		pivot := Partition(arr, low, high)
+		Quicksort(arr, low, pivot-1)
+		Quicksort(arr, pivot+1, high)
 	}
 }
 
-func quicksortCall(arr *[]int) {
-	quicksort(arr, 0, len(*arr)-1)
+func QuicksortCall(arr *[]int) {
+	Quicksort(arr, 0, len(*arr)-1)
 }
 
 /*
@@ -192,7 +237,7 @@ junto con un entero que indique la cantidad de comparaciones realizadas hasta de
 no presente en el arreglo.
 */
 
-func linearSearch(arr []int, key int) (bool, int) {
+func LinearSearch(arr []int, key int) (bool, int) {
 	for index, value := range arr {
 		if value == key {
 			return true, index + 1 // Found, index of where it was + 1 [because it starts at 0]
@@ -219,7 +264,7 @@ entero que indique la cantidad de comparaciones realizadas hasta determinar si l
 en el arreglo.
 */
 
-func binarySearch(arr []int, key int, left int, right int, n int) (bool, int) {
+func BinarySearch(arr []int, key int, left int, right int, n int) (bool, int) {
 	if left <= right {
 		mid := (left + right) / 2 // Mid value between left & right
 
@@ -228,16 +273,16 @@ func binarySearch(arr []int, key int, left int, right int, n int) (bool, int) {
 		if arr[mid] == key { // Found
 			return true, n
 		} else if arr[mid] > key {
-			return binarySearch(arr, key, left, mid-1, n+1) // Key is lesser
+			return BinarySearch(arr, key, left, mid-1, n+1) // Key is lesser
 		} else {
-			return binarySearch(arr, key, mid+1, right, n+1) // Key is greater
+			return BinarySearch(arr, key, mid+1, right, n+1) // Key is greater
 		}
 	}
 	return false, n // Not found
 }
 
-func binarySearchCall(arr []int, key int) (bool, int) {
-	return binarySearch(arr, key, 0, len(arr)-1, 1)
+func BinarySearchCall(arr []int, key int) (bool, int) {
+	return BinarySearch(arr, key, 0, len(arr)-1, 1)
 }
 
 /*
@@ -267,7 +312,7 @@ type BSTree struct {
 	count int
 }
 
-func (n *Node) print() {
+func (n *Node) Print() {
 	if n != nil {
 		fmt.Println(n.key)
 	} else {
@@ -284,7 +329,7 @@ se encuentra en el árbol, no la inserta. La función retorna un número entero,
 comparaciones realizadas, incluida la que llevó a la inserción.
 */
 
-func (b *BSTree) insertNode(value int, node *Node) *Node{
+func (b *BSTree) InsertNode(value int, node *Node) *Node{
 	b.count++ //New iteration
 
 	if node == nil {
@@ -293,15 +338,15 @@ func (b *BSTree) insertNode(value int, node *Node) *Node{
 	} else if node.key == value {
 		return node
 	} else if value < node.key {
-		node.left = b.insertNode(value, node.left)
+		node.left = b.InsertNode(value, node.left)
 	} else {
-		node.right = b.insertNode(value, node.right)
+		node.right = b.InsertNode(value, node.right)
 	}; return node
 }
 
-func (b *BSTree) insert(key int) int{
+func (b *BSTree) Insert(key int) int{
 	b.count = 0
-	b.root = b.insertNode(key, b.root)
+	b.root = b.InsertNode(key, b.root)
 	return b.count
 }
 
@@ -315,7 +360,7 @@ que indique la cantidad de comparaciones realizadas hasta determinar si la llave
 árbol.
 */
 
-func (b *BSTree) searchNode(value int, node *Node) bool {
+func (b *BSTree) SearchNode(value int, node *Node) bool {
 	b.count++
 
 	if node == nil {
@@ -323,15 +368,15 @@ func (b *BSTree) searchNode(value int, node *Node) bool {
 	} else if node.key == value {
 		return true
 	} else if value < node.key {
-		b.searchNode(value, node.left)
+		b.SearchNode(value, node.left)
 	} else {
-		b.searchNode(value, node.right)
+		b.SearchNode(value, node.right)
 	}; return false
 }
 
-func (b *BSTree) search(key int) (bool, int){
+func (b *BSTree) Search(key int) (bool, int){
 	b.count = 0
-	return b.searchNode(key, b.root), b.count
+	return b.SearchNode(key, b.root), b.count
 }
 
 /*
@@ -357,9 +402,3 @@ func testBSTree(){
 	fmt.Println("Search: ", a)
 }
 */
-
-
-/*
-func main(){
-	randArray(500, 19, 1, 2048)
-}*/

@@ -18,10 +18,13 @@ deberá ser un número primo entre 11 y 101. Los valores generados deben ser con
 func RandArray(n int, seed int, k int, m int) []int {
 	
 	// Validating "n"
+	
+	/*
 	if n < 200 || n > 1000 {
 		fmt.Println("El valor n es incorrecto")
 		return nil
 	}
+	*/
 	
 	// Validating Seed
 	if seed < 11 || seed > 101 {
@@ -67,7 +70,7 @@ func RandArray(n int, seed int, k int, m int) []int {
 		seed = num	// Seed is now the previous number
 	}
 
-	fmt.Println("Resultado: ", arr)
+	//fmt.Println("Resultado: ", arr)
 
 	return arr
 }
@@ -125,24 +128,15 @@ comparaciones realizadas, incluida la que llevó a la inserción.
 func InsertVal(arr *[]int, key int) int {
 	for index, value := range *arr {
 		if value == key {
+
 			return index + 1 // Found, returns number of comparisons done [index + 1 because it starts at 0]
 		}
 	}; len := len(*arr)
 
 	*arr = append(*arr, key)
+	
 	return len // Not found, checked all the values in the original array/slice and because it wasn't, it is the length of it.
 }
-
-/*
-func test3(){
-	slice1, slice2 := []int{-12,32,99,67,-83,123}, []int{0,1,2,3,4}
-
-	n1, n2 := 13, 2
-	three1, three2 := insertVal(&slice1,n1), insertVal(&slice2, n2)
-
-	fmt.Printf("Array 1 = Key: %d, Comparisons done: %d, Final Slice: %v\nArray 2 = Key: %d, Comparisons done: %d, Final Slice: %v", n1, three1, slice1, n2, three2, slice2)
-}
-*/
 
 
 /*
@@ -170,14 +164,6 @@ func SelectionSort(arr *[]int) {
 
 	*arr = arr2 // Assign changes to original array
 }
-
-/*
-func test4(){
-	arr := []int{-12,32,99,67,-83,123}
-	selectionSort(&arr)
-	fmt.Println(arr)
-}
-*/
 
 
 /*
@@ -219,14 +205,6 @@ func QuicksortCall(arr *[]int) {
 	Quicksort(arr, 0, len(*arr)-1)
 }
 
-/*
-func test5(){
-	arr := []int{-12,32,99,67,-83,123}
-	quicksortCall(&arr)
-	fmt.Println(arr)
-}
-*/
-
 
 /*
 ============
@@ -245,14 +223,6 @@ func LinearSearch(arr []int, key int) (bool, int) {
 	}
 	return false, len(arr) // Not Found, the whole length of the array
 }
-
-/*
-func test6(){
-	arr := []int{-12,32,99,67,-83,123}
-	fmt.Println(linearSearch(arr, 99))
-	fmt.Println(linearSearch(arr, 13))
-}
-*/
 
 
 /*
@@ -285,15 +255,6 @@ func BinarySearchCall(arr []int, key int) (bool, int) {
 	return BinarySearch(arr, key, 0, len(arr)-1, 1)
 }
 
-/*
-func test7() {
-	arr := []int{1, 5, 10, 12, 16, 23, 29, 32, 35, 40, 49, 56, 57, 70} // in ascendent order
-
-	fmt.Println(binarySearchCall(arr, 56))
-	fmt.Println(binarySearchCall(arr, 24))
-}
-*/
-
 
 /*
 ============
@@ -303,12 +264,12 @@ almacene un número entero.
 
 type Node struct {
 	key int
-	left *Node
-	right *Node
+	Left *Node
+	Right *Node
 }
 
 type BSTree struct {
-	root *Node
+	Root *Node
 	count int
 }
 
@@ -338,15 +299,15 @@ func (b *BSTree) InsertNode(value int, node *Node) *Node{
 	} else if node.key == value {
 		return node
 	} else if value < node.key {
-		node.left = b.InsertNode(value, node.left)
+		node.Left = b.InsertNode(value, node.Left)
 	} else {
-		node.right = b.InsertNode(value, node.right)
+		node.Right = b.InsertNode(value, node.Right)
 	}; return node
 }
 
 func (b *BSTree) Insert(key int) int{
 	b.count = 0
-	b.root = b.InsertNode(key, b.root)
+	b.Root = b.InsertNode(key, b.Root)
 	return b.count
 }
 
@@ -368,37 +329,13 @@ func (b *BSTree) SearchNode(value int, node *Node) bool {
 	} else if node.key == value {
 		return true
 	} else if value < node.key {
-		b.SearchNode(value, node.left)
+		b.SearchNode(value, node.Left)
 	} else {
-		b.SearchNode(value, node.right)
+		b.SearchNode(value, node.Right)
 	}; return false
 }
 
 func (b *BSTree) Search(key int) (bool, int){
 	b.count = 0
-	return b.SearchNode(key, b.root), b.count
+	return b.SearchNode(key, b.Root), b.count
 }
-
-/*
-func testBSTree(){
-	var b *BSTree = new(BSTree) //var b BSTree //
-
-	b.insert(5)
-	b.insert(7)
-	b.insert(4)
-	b.insert(8)
-	b.insert(10)
-
-	fmt.Println("Num: ", b.insert(0))
-
-	b.root.print()
-	b.root.right.print()
-	b.root.left.print()
-	b.root.right.right.print()
-	b.root.right.right.right.print()
-
-	_, a := b.search(5)
-
-	fmt.Println("Search: ", a)
-}
-*/

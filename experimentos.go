@@ -155,18 +155,24 @@ func experimento(n int) {
 }
 
 func main() {
+
+	fmt.Println("\nExperimento 200")
 	// ===== Experimento "n = 200" =====
 	experimento(200)
 
+	fmt.Println("\nExperimento 400")
 	// ===== Experimento "n = 400" =====
-	//experimento(400)
+	experimento(400)
 
+	fmt.Println("\nExperimento 600")
 	// ===== Experimento "n = 600" =====
-	//experimento(600)
+	experimento(600)
 
+	fmt.Println("\nExperimento 800")
 	// ===== Experimento "n = 800" =====
-	//experimento(800)
+	experimento(800)
 
+	fmt.Println("\nExperimento 1000")
 	// ===== Experimento "n = 1000" =====
-	//experimento(1000)
+	experimento(1000)
 }

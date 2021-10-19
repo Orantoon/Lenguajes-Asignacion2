@@ -3,7 +3,6 @@ package funciones
 import (
 	"fmt"
 	"os"
-
 	"github.com/wcharczuk/go-chart"
 )
 
@@ -338,4 +337,18 @@ func (b *BSTree) SearchNode(value int, node *Node) bool {
 func (b *BSTree) Search(key int) (bool, int){
 	b.count = 0
 	return b.SearchNode(key, b.Root), b.count
+}
+
+func (b *BSTree) MaxHeight(n *Node) int{
+	if n == nil{
+		return -1
+	} else {
+		return 1 + Max(b.MaxHeight(n.Left), b.MaxHeight(n.Right))
+	}
+}
+
+func Max(a int, b int) int{
+	if a > b {
+		return a
+	}; return b
 }
